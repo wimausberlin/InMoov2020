@@ -15,6 +15,7 @@ struct Clt {
 //List of clients
 //Modifier les limites des angles pour chaque client
 
+Clt client0{"WAIST", IPAddress(172, 20, 10, 120), 4321, 45, 90, 135};  //(-45) - neutre(0) - (+45)
 Clt client1{"SHOULDER LEFT", IPAddress(172, 20, 10, 121), 4321, 65, 87, 160}; //VALEURS A VERIFIER //Arrière - neutre - Avant
 Clt client2{"OMOPLATE LEFT", IPAddress(172, 20, 10, 122), 4321, 0, 5, 45}; //Collé au corps(-5) - neutre(0) - Levé côté(+40)
 Clt client3{"ROTATE LEFT", IPAddress(172, 20, 10, 123), 4321, 80, 100, 140}; //VALEURS A VERIFIER
@@ -104,10 +105,10 @@ void SendPacket(const char content[], IPAddress ip, int port)
 
 
 // send value to client
-bool SendValue(Clt& client_current, String angle_target_str) {
+bool CheckValue(Clt& client_current, String angle_target_str) {
   String command = "";
   // pre treatment
-  if (client_current.c_name == "HAND RIGHT" )
+  if (client_current.c_name == "HAND RIGHT" || client_current.c_name == "HAND LEFT")
   {
     command = angle_target_str.substring(3);
     angle_target_str = angle_target_str.substring(5);
@@ -126,22 +127,38 @@ bool SendValue(Clt& client_current, String angle_target_str) {
   // check
   if ((client_current.angle_min <= angle_target) && (client_current.angle_max >= angle_target)) {
     command.toCharArray(envoie_pkt, BUFFER_SIZE);
-    //SendPacket(envoie_pkt, client_current.ip, client_current.port);
+    
     return true;
   }
   // error
   return false;
 }
 
+char* ConvertToPacket(int angle) {   //Convert the angle given into a char array packet
+  char*  pck_char  = (char*) malloc(BUFFER_SIZE);
+  String angle_str = String(angle);
+  if ((0 <= angle && angle < 10) || (0 >= angle && angle > -10)) {   // 0 <= angle < 10  ; -10 < angle <= 0
+    pck_char[0] = angle_str[0];
+  }
+  if ((10 <= angle && angle < 100) || (-10 >= angle && angle > -100)) {   // 10 <= angle < 100  ; -100 < angle <= -10
+    pck_char[0] = angle_str[0];
+    pck_char[1] = angle_str[1];
+  }
+  if ((100 <= angle && angle <= 180) || (-100 >= angle && angle >= -180)) {   // 100 <= angle <= 180  ; -180 <= angle <= -100
+    pck_char[0] = angle_str[0];
+    pck_char[1] = angle_str[1];
+    pck_char[2] = angle_str[2];
+  }
+  return pck_char;
+}
 
 void Move1()//choreography  Move1
 {
-  char pck_char[255];
-  pck_char[0] = '4';
-  pck_char[1] = '0';
+  char* pck_char;
+  pck_char = ConvertToPacket(40);
 
-  SendPacket(pck_char, client5.ip, client5.port);//client 5: the left shoulder should move by 20 degrees
-  SendPacket(pck_char, client6.ip, client6.port);//client 6: the left omoplate should move by 20 degrees
+  SendPacket(pck_char, client0.ip, client0.port);//client 0: the left shoulder should move by 20 degrees
+  //SendPacket(pck_char, client6.ip, client6.port);//client 6: the left omoplate should move by 20 degrees
 }
 
 
@@ -157,55 +174,60 @@ void loop() {
       bool success = false;
       switch (envoie_angle[1])
       {
+        case '0':
+          success = CheckValue(client0, envoie_angle);
+          if (success) {
+            SendPacket(envoie_pkt, client0.ip, client0.port);
+          }
         case '1' :
-          success = SendValue(client1, envoie_angle);
+          success = CheckValue(client1, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client1.ip, client1.port);
           }
           break;
         case '2' :
-          success = SendValue(client2, envoie_angle);
+          success = CheckValue(client2, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client2.ip, client2.port);
           }
           break;
         case '3' :
-          success = SendValue(client3, envoie_angle);
+          success = CheckValue(client3, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client3.ip, client3.port);
           }
           break;
         case '4' :
-          success = SendValue(client4, envoie_angle);
+          success = CheckValue(client4, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client4.ip, client4.port);
           }
           break;
         case '5' :
-          success = SendValue(client5, envoie_angle);
+          success = CheckValue(client5, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client5.ip, client5.port);
           }
           break;
         case '6' :
-          success = SendValue(client6, envoie_angle);
+          success = CheckValue(client6, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client6.ip, client6.port);
           }
         case '7' :
-          success = SendValue(client7, envoie_angle);
+          success = CheckValue(client7, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client7.ip, client7.port);
           }
           break;
         case '8':
-          success = SendValue(client8, envoie_angle);
+          success = CheckValue(client8, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client8.ip, client8.port);
           }
           break;
         case '9':
-          success = SendValue(client9, envoie_angle);
+          success = CheckValue(client9, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client9.ip, client9.port);
           }
@@ -222,7 +244,7 @@ void loop() {
         Serial.println();
       }
     }
-    else{
+    else {
       Move1();
     }
   }
