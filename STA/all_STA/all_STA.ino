@@ -27,6 +27,7 @@ struct Clt {
 
 
 //List of clients
+Clt client0{"WAIST", IPAddress(172, 20, 10, 120), 4321, 90};
 Clt client1{"SHOULDER LEFT",IPAddress(172, 20, 10, 121), IPAddress(172, 20, 10, 9), 4321, 87};
 Clt client2{"OMOPLATE LEFT",IPAddress(172, 20, 10, 122), IPAddress(172, 20, 10, 9), 4321, 5};
 Clt client3{"ROTATE LEFT",IPAddress(172, 20, 10, 123), IPAddress(172, 20, 10, 9), 4321, 100};
@@ -35,8 +36,10 @@ Clt client5{"HEAD Y",IPAddress(172, 20, 10, 125), IPAddress(172, 20, 10, 9), 432
 Clt client6{"HEAD X",IPAddress(172, 20, 10, 126), IPAddress(172, 20, 10, 9), 4321, 102};
 Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), 4321, 0};            //HAND RIGHT
 Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), 4321, 0};             //HAND LEFT
-Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 128), 4321, 0};
+Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 129), 4321, 0};
 
+Clt client_USED{client0.c_name, client0.ip, 4321, client0.angle_Center}; //client actuel utilisé dans le programme
+ 
 
 IPAddress subnet(255, 255, 255, 0);
 WiFiUDP udp;
@@ -58,15 +61,15 @@ void isDisconnected()
 void setup() {
   Serial.begin(115200);
   servo.attach(pin_servo);
-  servo.write(client9.angle_Center);
+  servo.write(client_USED.angle_Center);
   pinMode(LED_BUILTIN, OUTPUT);
   WiFi.mode(WIFI_STA);
   WiFi.begin(STA_ssid, STA_password);
   Serial.print("Connecting to EPS8266 to ");
   Serial.print(STA_ssid);
   isDisconnected();
-  WiFi.config(client9.ip, client9.gateway, subnet);
-  udp.begin(client9.port);
+  WiFi.config(client_USED.ip, client_USED.gateway, subnet);
+  udp.begin(client_USED.port);
 }
 
 int ReadPacket() {
@@ -89,22 +92,22 @@ int ReadPacket() {
   }
 }
 
-  void servoMove(int angle_Suivant, int angle_Current )
+  void servoMove(int angle_Suivant, int angle_Current ) //Adjust the rotation speed by changing the delay
   {
     if (angle_Suivant < angle_Current)
     {
       for (int index = angle_Current; index >= angle_Suivant; index--)
       {
-        servo.write(client9.angle_Center + index);
-        delay(15);
+        servo.write(client_USED.angle_Center + index);
+        delay(30);
       }
     }
     else
     {
       for (int index = angle_Current; index <= angle_Suivant ; index++)
       {
-        servo.write(client9.angle_Center + index);
-        delay(15);
+        servo.write(client_USED.angle_Center + index);
+        delay(30);
       }
     }
     angle_Current = angle_Suivant;
