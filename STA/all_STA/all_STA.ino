@@ -27,18 +27,19 @@ struct Clt {
 
 
 //List of clients
-Clt client0{"WAIST", IPAddress(172, 20, 10, 120), 4321, 90};
+
 Clt client1{"SHOULDER LEFT",IPAddress(172, 20, 10, 121), IPAddress(172, 20, 10, 9), 4321, 87};
 Clt client2{"OMOPLATE LEFT",IPAddress(172, 20, 10, 122), IPAddress(172, 20, 10, 9), 4321, 5};
 Clt client3{"ROTATE LEFT",IPAddress(172, 20, 10, 123), IPAddress(172, 20, 10, 9), 4321, 100};
 Clt client4{"BICEPS LEFT",IPAddress(172, 20, 10, 124), IPAddress(172, 20, 10, 9), 4321, 120};
 Clt client5{"HEAD Y",IPAddress(172, 20, 10, 125), IPAddress(172, 20, 10, 9), 4321, 130};
 Clt client6{"HEAD X",IPAddress(172, 20, 10, 126), IPAddress(172, 20, 10, 9), 4321, 102};
-Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), 4321, 0};            //HAND RIGHT
-Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), 4321, 0};             //HAND LEFT
-Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 129), 4321, 0};
-
-Clt client_USED{client0.c_name, client0.ip, 4321, client0.angle_Center}; //client actuel utilisé dans le programme
+Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), IPAddress(172, 20, 10, 9), 4321, 0};            //HAND RIGHT
+Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), IPAddress(172, 20, 10, 9), 4321, 0};             //HAND LEFT
+Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 129), IPAddress(172, 20, 10, 9), 4321, 0};
+Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), IPAddress(172, 20, 10, 9), 4321, 90};
+Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), IPAddress(172, 20, 10, 9), 4321, 90};
+Clt client_USED{clientB.c_name, clientB.ip, clientB.gateway, clientB.port, clientB.angle_Center}; //client actuel utilisé dans le programme
  
 
 IPAddress subnet(255, 255, 255, 0);
