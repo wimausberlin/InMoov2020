@@ -15,16 +15,19 @@ struct Clt {
 //List of clients
 //Modifier les limites des angles pour chaque client
 
-Clt client0{"WAIST", IPAddress(172, 20, 10, 120), 4321, 45, 90, 135};  //(-45) - neutre(0) - (+45)
 Clt client1{"SHOULDER LEFT", IPAddress(172, 20, 10, 121), 4321, 65, 87, 160}; //VALEURS A VERIFIER //Arrière - neutre - Avant
 Clt client2{"OMOPLATE LEFT", IPAddress(172, 20, 10, 122), 4321, 0, 5, 45}; //Collé au corps(-5) - neutre(0) - Levé côté(+40)
 Clt client3{"ROTATE LEFT", IPAddress(172, 20, 10, 123), 4321, 80, 100, 140}; //VALEURS A VERIFIER
 Clt client4{"BICEPS LEFT", IPAddress(172, 20, 10, 124), 4321, 20, 50, 102}; //VALEURS A VERIFIER
-Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 60, 130, 180};   //Menton en bas(-70) - neutre(0) - Lève la tête(+50)
+//Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 60, 130, 180};   //Menton en bas(-70) - neutre(0) - Lève la tête(+50)
+Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 45, 90, 135};
 Clt client6{"HEAD X", IPAddress(172, 20, 10, 126), 4321, 50, 102, 160};   //A droite(-52) - neutre(0) - A gauche(+58)
 Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), 4321, 0, 0, 150};          //HAND RIGHT
 Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), 4321, 0, 0, 150};             //HAND LEFT
 Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 129), 4321, 0, 0, 130};
+Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), 4321, 45, 90, 135};  //vers la droite(-45) - neutre(0) - vers la gauche(+45)
+Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), 4321, 60, 90, 120};
+
 
 //WiFi Connection
 //const char* STA_ssid = "arduino1";
@@ -127,7 +130,7 @@ bool CheckValue(Clt& client_current, String angle_target_str) {
   // check
   if ((client_current.angle_min <= angle_target) && (client_current.angle_max >= angle_target)) {
     command.toCharArray(envoie_pkt, BUFFER_SIZE);
-    
+
     return true;
   }
   // error
@@ -157,7 +160,7 @@ void Move1()//choreography  Move1
   char* pck_char;
   pck_char = ConvertToPacket(40);
 
-  SendPacket(pck_char, client0.ip, client0.port);//client 0: the left shoulder should move by 20 degrees
+  SendPacket(pck_char, clientA.ip, clientA.port);//client 0: the left shoulder should move by 20 degrees
   //SendPacket(pck_char, client6.ip, client6.port);//client 6: the left omoplate should move by 20 degrees
 }
 
@@ -174,11 +177,6 @@ void loop() {
       bool success = false;
       switch (envoie_angle[1])
       {
-        case '0':
-          success = CheckValue(client0, envoie_angle);
-          if (success) {
-            SendPacket(envoie_pkt, client0.ip, client0.port);
-          }
         case '1' :
           success = CheckValue(client1, envoie_angle);
           if (success) {
@@ -230,6 +228,18 @@ void loop() {
           success = CheckValue(client9, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, client9.ip, client9.port);
+          }
+          break;
+        case 'A':
+          success = CheckValue(clientA, envoie_angle);
+          if (success) {
+            SendPacket(envoie_pkt, clientA.ip, clientA.port);
+          }
+          break;
+          case 'B':
+          success = CheckValue(clientB, envoie_angle);
+          if (success) {
+            SendPacket(envoie_pkt, clientB.ip, clientB.port);
           }
           break;
         default:
