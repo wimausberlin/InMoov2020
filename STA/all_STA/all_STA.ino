@@ -10,7 +10,7 @@ const char* STA_password = "ESP8266Inmoov";
 int angle_Current; //
 
 char buffer[BUFFER_SIZE];
-char incomingPacket[255];  // buffer for incoming packets
+char incomingPacket[BUFFER_SIZE];  // buffer for incoming packets
 int len = 0;
 int angle_Suivant = 0;
 
@@ -33,13 +33,13 @@ Clt client2{"OMOPLATE LEFT",IPAddress(172, 20, 10, 122), IPAddress(172, 20, 10, 
 Clt client3{"ROTATE LEFT",IPAddress(172, 20, 10, 123), IPAddress(172, 20, 10, 9), 4321, 100};
 Clt client4{"BICEPS LEFT",IPAddress(172, 20, 10, 124), IPAddress(172, 20, 10, 9), 4321, 120};
 Clt client5{"HEAD Y",IPAddress(172, 20, 10, 125), IPAddress(172, 20, 10, 9), 4321, 130};
-Clt client6{"HEAD X",IPAddress(172, 20, 10, 126), IPAddress(172, 20, 10, 9), 4321, 102};
+Clt client6{"HEAD Z",IPAddress(172, 20, 10, 126), IPAddress(172, 20, 10, 9), 4321, 102};
 Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), IPAddress(172, 20, 10, 9), 4321, 0};            //HAND RIGHT
 Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), IPAddress(172, 20, 10, 9), 4321, 0};             //HAND LEFT
 Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 129), IPAddress(172, 20, 10, 9), 4321, 0};
-Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), IPAddress(172, 20, 10, 9), 4321, 90};
+Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), IPAddress(172, 20, 10, 9), 4321, 77};
 Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), IPAddress(172, 20, 10, 9), 4321, 90};
-Clt client_USED{clientB.c_name, clientB.ip, clientB.gateway, clientB.port, clientB.angle_Center}; //client actuel utilisé dans le programme
+Clt client_USED{client3.c_name, client3.ip, client3.gateway, client3.port, client3.angle_Center}; //client actuel utilisé dans le programme
  
 
 IPAddress subnet(255, 255, 255, 0);
@@ -62,7 +62,7 @@ void isDisconnected()
 void setup() {
   Serial.begin(115200);
   servo.attach(pin_servo);
-  servo.write(client_USED.angle_Center);
+  servo.write(client_USED.angle_Center); //Reset all servos to their center position when power is turned on
   pinMode(LED_BUILTIN, OUTPUT);
   WiFi.mode(WIFI_STA);
   WiFi.begin(STA_ssid, STA_password);
@@ -79,7 +79,7 @@ int ReadPacket() {
   if (packetSize)
   {
     // receive incoming UDP packets
-    len = udp.read(incomingPacket, 255);
+    len = udp.read(incomingPacket, BUFFER_SIZE);
     if (len > 0)
     {
       incomingPacket[len] = 0;
@@ -120,6 +120,7 @@ int ReadPacket() {
     ---------------------*/
   void loop() {
     isDisconnected();
+    
     angle_Suivant = ReadPacket();
     if (angle_Suivant != angle_Current)      //CORRIGER LA COMMANDE QUAND ON ENTRE 0 = POSITION INITIALE  
     {
