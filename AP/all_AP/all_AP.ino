@@ -12,21 +12,21 @@ struct Clt {
   int angle_Center;
   int angle_max;
 };
-//List of clients
-//Modifier les limites des angles pour chaque client
 
+/*----------------------
+     List of clients
+  -----------------------*/
 Clt client1{"SHOULDER LEFT", IPAddress(172, 20, 10, 121), 4321, 65, 87, 160}; //VALEURS A VERIFIER //Arrière - neutre - Avant
 Clt client2{"OMOPLATE LEFT", IPAddress(172, 20, 10, 122), 4321, 0, 5, 45}; //Collé au corps(-5) - neutre(0) - Levé côté(+40)
 Clt client3{"ROTATE LEFT", IPAddress(172, 20, 10, 123), 4321, 80, 100, 140}; //VALEURS A VERIFIER
 Clt client4{"BICEPS LEFT", IPAddress(172, 20, 10, 124), 4321, 20, 50, 102}; //VALEURS A VERIFIER
-//Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 60, 130, 180};   //Menton en bas(-70) - neutre(0) - Lève la tête(+50)
-Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 45, 90, 135};
-Clt client6{"HEAD X", IPAddress(172, 20, 10, 126), 4321, 50, 102, 160};   //A droite(-52) - neutre(0) - A gauche(+58)
+Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 60, 130, 180};   //Menton en bas(-70) - neutre(0) - Lève la tête(+50)
+Clt client6{"HEAD Z", IPAddress(172, 20, 10, 126), 4321, 50, 102, 160};   //A droite(-52) - neutre(0) - A gauche(+58)
 Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), 4321, 0, 0, 150};          //HAND RIGHT
 Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), 4321, 0, 0, 150};             //HAND LEFT
 Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 129), 4321, 0, 0, 130};
-Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), 4321, 45, 90, 135};  //vers la droite(-45) - neutre(0) - vers la gauche(+45)
-Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), 4321, 60, 90, 120};
+Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), 4321, 32, 77, 122};  //vers la droite(-45) - neutre(0) - vers la gauche(+45)
+Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), 4321, 60, 90, 120}; //vers la droite(+30) - neutre(0) - vers la gauche(-30)
 
 
 //WiFi Connection
@@ -71,9 +71,9 @@ void setup() {
   delay(5000);
   pinMode(LED_BUILTIN, OUTPUT);
 
-  /*----------------------
-    Config STA
-    ---------------------*/
+/*----------------------
+        Config STA
+  -----------------------*/
   WiFi.begin(STA_ssid, STA_password);
   Serial.print("Connecting to EPS8266 to ");
   Serial.print(STA_ssid);
@@ -84,9 +84,9 @@ void setup() {
   Serial.print("IP adress STA:\t");
   Serial.println(WiFi.localIP());
   delay(500);
-  /*----------------------
-    Config AP
-    ---------------------*/
+/*----------------------
+        Config AP
+  -----------------------*/
   WiFi.softAP(AP_ssid, AP_password);
   WiFi.softAPConfig(AP_ip, AP_gateway, subnet);
   Serial.println("\nSetting AP\t");
@@ -107,7 +107,7 @@ void SendPacket(const char content[], IPAddress ip, int port)
 }
 
 
-// send value to client
+// Check if the value sent to client is in the client angles'range
 bool CheckValue(Clt& client_current, String angle_target_str) {
   String command = "";
   // pre treatment
@@ -125,12 +125,11 @@ bool CheckValue(Clt& client_current, String angle_target_str) {
   // print
   Serial.print("client:");
   Serial.println(client_current.c_name);
-  Serial.print(" target: ");
+  Serial.print("target: ");
   Serial.println(angle_target);
   // check
   if ((client_current.angle_min <= angle_target) && (client_current.angle_max >= angle_target)) {
     command.toCharArray(envoie_pkt, BUFFER_SIZE);
-
     return true;
   }
   // error
@@ -155,6 +154,64 @@ char* ConvertToPacket(int angle) {   //Convert the angle given into a char array
   return pck_char;
 }
 
+
+/*-------------------------
+        Mouvement Methods
+  --------------------------*/
+
+//******************
+// All Head moves
+//******************
+void Move_HEAD(char move_direction) { // U = UP ; D = Down ; R = Right ; L = Left ; 7 = Up Right ; 9 = Up Left ; 1 = Down Right ; 3 = Down Left ; 0 = Reset Position (1~=0)
+  char* pck_char_HEAD_Y;                                                            //see arrows on num keyboard
+  char* pck_char_HEAD_Z;
+  int HEAD_Y_U = 45;
+  int HEAD_Y_D = -60;
+  int HEAD_Z_R = -50;
+  int HEAD_Z_L = 50;
+
+  switch (move_direction) {
+    case 'U': //UP
+      pck_char_HEAD_Y = ConvertToPacket(HEAD_Y_U);
+      pck_char_HEAD_Z = ConvertToPacket(1);
+      break;
+    case 'D': //DOWN
+      pck_char_HEAD_Y = ConvertToPacket(HEAD_Y_D);
+      pck_char_HEAD_Z = ConvertToPacket(1);
+      break;
+    case 'R': //RIGHT
+      pck_char_HEAD_Y = ConvertToPacket(1);
+      pck_char_HEAD_Z = ConvertToPacket(HEAD_Z_R);
+      break;
+    case 'L': //LEFT
+      pck_char_HEAD_Y = ConvertToPacket(1);
+      pck_char_HEAD_Z = ConvertToPacket(HEAD_Z_L);
+      break;
+    case '7': //UP RIGHT
+      pck_char_HEAD_Y = ConvertToPacket(HEAD_Y_U);
+      pck_char_HEAD_Z = ConvertToPacket(HEAD_Z_R);
+      break;
+    case '9': //UP LEFT
+      pck_char_HEAD_Y = ConvertToPacket(HEAD_Y_U);
+      pck_char_HEAD_Z = ConvertToPacket(HEAD_Z_L);
+      break;
+    case '1': //DOWN RIGHT
+      pck_char_HEAD_Y = ConvertToPacket(HEAD_Y_D);
+      pck_char_HEAD_Z = ConvertToPacket(HEAD_Z_R);
+      break;
+    case '3': //DOWN LEFT
+      pck_char_HEAD_Y = ConvertToPacket(HEAD_Y_D);
+      pck_char_HEAD_Z = ConvertToPacket(HEAD_Z_L);
+      break;
+    case '0': //RESET
+      pck_char_HEAD_Y = ConvertToPacket(1);
+      pck_char_HEAD_Z = ConvertToPacket(1);
+      break;
+  }
+  SendPacket(pck_char_HEAD_Y, client5.ip, client5.port);
+  SendPacket(pck_char_HEAD_Z, client6.ip, client6.port);
+}
+
 void Move1()//choreography  Move1
 {
   char* pck_char;
@@ -166,6 +223,12 @@ void Move1()//choreography  Move1
 
 
 
+
+
+
+/*----------------------
+        MAIN LOOP
+    ---------------------*/
 void loop() {
   isDisconnected();
 
@@ -236,7 +299,7 @@ void loop() {
             SendPacket(envoie_pkt, clientA.ip, clientA.port);
           }
           break;
-          case 'B':
+        case 'B':
           success = CheckValue(clientB, envoie_angle);
           if (success) {
             SendPacket(envoie_pkt, clientB.ip, clientB.port);
