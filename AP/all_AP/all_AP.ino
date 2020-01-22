@@ -16,17 +16,20 @@ struct Clt {
 /*----------------------
      List of clients
   -----------------------*/
-Clt client1{"SHOULDER LEFT", IPAddress(172, 20, 10, 121), 4321, 65, 87, 160}; //VALEURS A VERIFIER //Arrière - neutre - Avant
-Clt client2{"OMOPLATE LEFT", IPAddress(172, 20, 10, 122), 4321, 0, 5, 45}; //Collé au corps(-5) - neutre(0) - Levé côté(+40)
-Clt client3{"ROTATE LEFT", IPAddress(172, 20, 10, 123), 4321, 80, 100, 140}; //VALEURS A VERIFIER
-Clt client4{"BICEPS LEFT", IPAddress(172, 20, 10, 124), 4321, 20, 50, 102}; //VALEURS A VERIFIER
-Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 60, 130, 180};   //Menton en bas(-70) - neutre(0) - Lève la tête(+50)
-Clt client6{"HEAD Z", IPAddress(172, 20, 10, 126), 4321, 50, 102, 160};   //A droite(-52) - neutre(0) - A gauche(+58)
-Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), 4321, 0, 0, 150};          //HAND RIGHT
-Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), 4321, 0, 0, 150};             //HAND LEFT
-Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 129), 4321, 0, 0, 130};
-Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), 4321, 40, 85, 130};  //vers la droite(-45) - neutre(0) - vers la gauche(+45)
-Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), 4321, 55, 80, 105}; //vers la droite(+25) - neutre(0) - vers la gauche(-25)
+Clt client1{"SHOULDER RIGHT", IPAddress(172, 20, 10, 121), 4321, 5, 10, 50}; //Arrière(-5) - neutre(0) - Avant(+40)   //CHECK
+Clt client2{"OMOPLATE RIGHT", IPAddress(172, 20, 10, 122), 4321, 30, 30, 70}; //Collé au corps(0) - neutre(0) - Levé côté(+40)    //CHECK
+Clt client3{"ROTATE RIGHT", IPAddress(172, 20, 10, 123), 4321, 80, 100, 140}; //Vers l'intérieur(-20) - neutre(0) - vers l'extérieur(+40)  //CHECK 
+Clt client4{"BICEPS RIGHT", IPAddress(172, 20, 10, 124), 4321, 20, 50, 102}; //VALEURS A VERIFIER
+Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 60, 130, 180};   //Menton en bas(-70) - neutre(0) - Lève la tête(+50)    //CHECK
+Clt client6{"HEAD Z", IPAddress(172, 20, 10, 126), 4321, 50, 102, 160};   //A droite(-52) - neutre(0) - A gauche(+58)   //CHECK
+Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), 4321, 0, 0, 150};          //HAND RIGHT    //VALEURS A VERIFIER
+Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), 4321, 0, 0, 150};             //HAND LEFT   //VALEURS A VERIFIER
+Clt client9{"WRIST RIGHT", IPAddress(172, 20, 10, 129), 4321, 0, 0, 130};   //VALEURS A VERIFIER
+Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), 4321, 40, 85, 130};  //vers la droite(-45) - neutre(0) - vers la gauche(+45)  //CHECK
+Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), 4321, 55, 80, 105}; //vers la droite(+25) - neutre(0) - vers la gauche(-25)   //CHECK
+
+
+
 
 
 //WiFi Connection
@@ -222,25 +225,25 @@ void Move1()//choreography  Move1
 }
 
 void HEAD_MOVES() {
-  Move_HEAD('L'); //Start Complete circle
-  delay(1000);
+ /* Move_HEAD('L'); //Start Complete circle
+  delay(3000);
   Move_HEAD('7');
-  delay(1000);
+  delay(3000);
   Move_HEAD('U');
-  delay(1000);
+  delay(3000);
   Move_HEAD('9');
-  delay(1000);
+  delay(3000);
   Move_HEAD('R');
-  delay(1000);
+  delay(3000);
   Move_HEAD('3');
-  delay(1000);
+  delay(3000);
   Move_HEAD('D');
-  delay(1000);
+  delay(3000);
   Move_HEAD('1');
-  delay(1000);
+  delay(3000);
   Move_HEAD('0');  //End Complete circle
-  
-  delay(5000);    
+*/
+ /* delay(5000);
   Move_HEAD('9'); //Start 'X'-Move
   delay(2000);
   Move_HEAD('1');
@@ -250,16 +253,16 @@ void HEAD_MOVES() {
   Move_HEAD('3');
   delay(2000);
   Move_HEAD('0');  //End 'X'-Move
-  
+*/
   delay(5000);
   Move_HEAD('L'); //Start '+'-Move
-  delay(2000);
+  delay(3000);
   Move_HEAD('U');
-  delay(2000);
+  delay(3000);
   Move_HEAD('R');
-  delay(2000);
+  delay(3000);
   Move_HEAD('D');
-  delay(2000);
+  delay(3000);
   Move_HEAD('0'); //End '+'-Move
 }
 
@@ -316,6 +319,7 @@ void loop() {
           if (success) {
             SendPacket(envoie_pkt, client6.ip, client6.port);
           }
+          break;
         case '7' :
           success = CheckValue(client7, envoie_angle);
           if (success) {
@@ -359,9 +363,9 @@ void loop() {
       }
     }
     else {
-      if (envoie_angle[0] == 'H'){
+      if (envoie_angle[0] == 'H') {
         HEAD_MOVES();
-      }      
+      }
     }
   }
 }
