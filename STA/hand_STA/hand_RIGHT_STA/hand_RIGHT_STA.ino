@@ -11,9 +11,10 @@ const char* STA_password = "ESP8266Inmoov";
 char buffer[BUFFER_SIZE];
 char incomingPacket[BUFFER_SIZE];  // buffer for incoming packets
 int len = 0;
-int angle_Current; //
+int angle_Current;
 int angle_Next = 0;
 
+//Define all finger servos
 Servo servo_T;
 Servo servo_I;
 Servo servo_M;
@@ -21,20 +22,21 @@ Servo servo_R;
 Servo servo_P;
 
 //Finger Structure
-struct Doigt {
-  String d_name;
+struct Finger {
+  String f_name;
   Servo servo;
   int pin_servo;
   int angle_min;
   int angle_Center;
   int angle_max;
 };
+
 // List of fingers
-Doigt THUMB{"THUMB", servo_T, 16, 0, 0, 145};     //16 = Pin D0 de l'ESP8266
-Doigt INDEX{"INDEX", servo_I, 5, 0, 0, 150};      //5 = Pin D1 de l'ESP8266
-Doigt MID_FING{"MID_FING", servo_M, 4, 0, 0, 150};   //4 = Pin D2 de l'ESP8266
-Doigt RING{"RING", servo_R, 0, 0, 0, 130};       //0 = Pin D3 de l'ESP8266
-Doigt PINKY{"PINKY", servo_P, 2, 0, 0, 150};      //2 = Pin D4 de l'ESP8266
+Finger THUMB{"THUMB", servo_T, 16, 0, 0, 145};     //16 = Pin D0 de l'ESP8266
+Finger INDEX{"INDEX", servo_I, 5, 0, 0, 150};      //5 = Pin D1 de l'ESP8266
+Finger MID_FING{"MID_FING", servo_M, 4, 0, 0, 150};   //4 = Pin D2 de l'ESP8266
+Finger RING{"RING", servo_R, 0, 0, 0, 130};       //0 = Pin D3 de l'ESP8266
+Finger PINKY{"PINKY", servo_P, 2, 0, 0, 150};      //2 = Pin D4 de l'ESP8266
 
 
 //Client Structure
@@ -90,7 +92,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   WiFi.mode(WIFI_STA);
   WiFi.begin(STA_ssid, STA_password);
-  Serial.print("Connecting to EPS8266 to ");
+  Serial.print("Connecting to ESP8266 ");
   Serial.print(STA_ssid);
   isDisconnected();
   WiFi.config(client7.ip, client7.gateway, subnet);
@@ -99,9 +101,8 @@ void setup() {
 }
 
 //Send value to the right servo
-bool SendValue(Doigt& doigt_current, int angle_target) {
-  if ((doigt_current.angle_min <= angle_target) && (doigt_current.angle_max >= angle_target)) {
-
+bool CheckValue(Finger& finger_current, int angle_target) {
+  if ((finger_current.angle_min <= angle_target) && (finger_current.angle_max >= angle_target)) {
     return true;
   }
   //error
@@ -125,35 +126,35 @@ int ReadPacket() {
     switch (donnee[0])
     {
       case 'T':
-        if (SendValue(THUMB, angle_Suivant)) {
-        servoCurrent = THUMB.servo;
-      }
-      break;
-    case 'I':
-        if (SendValue(INDEX, angle_Suivant)) {
+        if (CheckValue(THUMB, angle_Suivant)) {
+          servoCurrent = THUMB.servo;
+        }
+        break;
+      case 'I':
+        if (CheckValue(INDEX, angle_Suivant)) {
           servoCurrent = INDEX.servo;
         }
-      break;
-    case 'M':
-        if (SendValue(MID_FING, angle_Suivant)) {
+        break;
+      case 'M':
+        if (CheckValue(MID_FING, angle_Suivant)) {
           servoCurrent = MID_FING.servo;
         }
-      break;
-    case 'R':
-        if (SendValue(RING, angle_Suivant)) {
+        break;
+      case 'R':
+        if (CheckValue(RING, angle_Suivant)) {
           servoCurrent = RING.servo;
         }
-      break;
-    case 'P':
-        if (SendValue(PINKY, angle_Suivant)) {
+        break;
+      case 'P':
+        if (CheckValue(PINKY, angle_Suivant)) {
           servoCurrent = PINKY.servo;
         }
-      break;
-    default:
         break;
-      }
-  return angle_Suivant;
-}
+      default:
+        break;
+    }
+    return angle_Suivant;
+  }
 }
 
 int AngletoInt(String donnee)
@@ -191,7 +192,7 @@ void servoMove(int angle_Suivant, int angle_Current, Servo servo )
 void loop() {
   isDisconnected();
   angle_Next = ReadPacket();
-  if (angle_Next != angle_Current)      //CORRIGER LA COMMANDE QUAND ON ENTRE 0 = POSITION INITIALE
+  if (angle_Next != angle_Current)      
   {
     servoMove(angle_Next, angle_Current, servoCurrent);
   }
