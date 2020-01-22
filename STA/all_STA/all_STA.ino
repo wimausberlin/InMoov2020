@@ -28,18 +28,18 @@ struct Clt {
 
 //List of clients
 
-Clt client1{"SHOULDER LEFT",IPAddress(172, 20, 10, 121), IPAddress(172, 20, 10, 9), 4321, 87};
-Clt client2{"OMOPLATE LEFT",IPAddress(172, 20, 10, 122), IPAddress(172, 20, 10, 9), 4321, 5};
-Clt client3{"ROTATE LEFT",IPAddress(172, 20, 10, 123), IPAddress(172, 20, 10, 9), 4321, 100};
-Clt client4{"BICEPS LEFT",IPAddress(172, 20, 10, 124), IPAddress(172, 20, 10, 9), 4321, 120};
-Clt client5{"HEAD Y",IPAddress(172, 20, 10, 125), IPAddress(172, 20, 10, 9), 4321, 130};
-Clt client6{"HEAD Z",IPAddress(172, 20, 10, 126), IPAddress(172, 20, 10, 9), 4321, 102};
-Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), IPAddress(172, 20, 10, 9), 4321, 0};            //HAND RIGHT
-Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), IPAddress(172, 20, 10, 9), 4321, 0};             //HAND LEFT
-Clt client9{"WRIST LEFT", IPAddress(172, 20, 10, 129), IPAddress(172, 20, 10, 9), 4321, 0};
-Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), IPAddress(172, 20, 10, 9), 4321, 85};
-Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), IPAddress(172, 20, 10, 9), 4321, 80};
-Clt client_USED{client5.c_name, client5.ip, client5.gateway, client5.port, client5.angle_Center}; //client actuel utilisé dans le programme
+Clt client1{"SHOULDER RIGHT",IPAddress(172, 20, 10, 121), IPAddress(172, 20, 10, 9), 4321, 10};//CHECK
+Clt client2{"OMOPLATE RIGHT",IPAddress(172, 20, 10, 122), IPAddress(172, 20, 10, 9), 4321, 30};//CHECK
+Clt client3{"ROTATE RIGHT",IPAddress(172, 20, 10, 123), IPAddress(172, 20, 10, 9), 4321, 100};//CHECK
+Clt client4{"BICEPS RIGHT",IPAddress(172, 20, 10, 124), IPAddress(172, 20, 10, 9), 4321, 120};    //VALEURS A VERIFIER
+Clt client5{"HEAD Y",IPAddress(172, 20, 10, 125), IPAddress(172, 20, 10, 9), 4321, 130};//CHECK
+Clt client6{"HEAD Z",IPAddress(172, 20, 10, 126), IPAddress(172, 20, 10, 9), 4321, 102};//CHECK
+Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), IPAddress(172, 20, 10, 9), 4321, 0};        //HAND RIGHT   //VALEURS A VERIFIER
+Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), IPAddress(172, 20, 10, 9), 4321, 0};         //HAND LEFT    //VALEURS A VERIFIER
+Clt client9{"WRIST RIGHT", IPAddress(172, 20, 10, 129), IPAddress(172, 20, 10, 9), 4321, 0};    //VALEURS A VERIFIER
+Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), IPAddress(172, 20, 10, 9), 4321, 85};//CHECK
+Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), IPAddress(172, 20, 10, 9), 4321, 80};//CHECK
+Clt client_USED{clientA.c_name, clientA.ip, clientA.gateway, clientA.port, clientA.angle_Center}; //client actuel utilisé dans le programme
  
 
 IPAddress subnet(255, 255, 255, 0);
