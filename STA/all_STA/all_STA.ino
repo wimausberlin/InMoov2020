@@ -39,7 +39,13 @@ Clt client8{"HAND LEFT", IPAddress(172, 20, 10, 128), IPAddress(172, 20, 10, 9),
 Clt client9{"WRIST RIGHT", IPAddress(172, 20, 10, 129), IPAddress(172, 20, 10, 9), 4321, 0};    //VALEURS A VERIFIER
 Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), IPAddress(172, 20, 10, 9), 4321, 85};//CHECK
 Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), IPAddress(172, 20, 10, 9), 4321, 80};//CHECK
-Clt client_USED{clientA.c_name, clientA.ip, clientA.gateway, clientA.port, clientA.angle_Center}; //client actuel utilisé dans le programme
+
+Clt clientC{"SHOULDER LEFT", IPAddress(172, 20, 10, 132), IPAddress(172, 20, 10, 9), 4321, 85};   //CHECK
+Clt clientD{"OMOPLATE LEFT",IPAddress(172, 20, 10, 133), IPAddress(172, 20, 10, 9), 4321, 0};//CHECK
+Clt clientE{"ROTATE LEFT",IPAddress(172, 20, 10, 134), IPAddress(172, 20, 10, 9), 4321, 100};//CHECK
+
+
+Clt client_USED{clientD.c_name, clientD.ip, clientD.gateway, clientD.port, clientD.angle_Center}; //client actuel utilisé dans le programme
  
 
 IPAddress subnet(255, 255, 255, 0);
@@ -85,7 +91,6 @@ int ReadPacket() {
       incomingPacket[len] = 0;
     }
     String donnee = String(incomingPacket);
-    //Etudier les différents traitements de données pour la main et les doigts + les autres moteurs
      
     angle_Suivant = donnee.toInt();
     
