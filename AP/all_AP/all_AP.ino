@@ -1,6 +1,5 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-
 #define BUFFER_SIZE 255 //size of the buffer
 
 //Client Structure
@@ -18,7 +17,7 @@ struct Clt {
   -----------------------*/
 Clt client1{"SHOULDER RIGHT", IPAddress(172, 20, 10, 121), 4321, 5, 10, 50}; //Arrière(-5) - neutre(0) - Avant(+40)   //CHECK
 Clt client2{"OMOPLATE RIGHT", IPAddress(172, 20, 10, 122), 4321, 30, 30, 70}; //Collé au corps(0) - neutre(0) - Levé côté(+40)    //CHECK
-Clt client3{"ROTATE RIGHT", IPAddress(172, 20, 10, 123), 4321, 80, 100, 140}; //Vers l'intérieur(-20) - neutre(0) - vers l'extérieur(+40)  //CHECK 
+Clt client3{"ROTATE RIGHT", IPAddress(172, 20, 10, 123), 4321, 80, 100, 140}; //Vers l'intérieur(-20) - neutre(0) - vers l'extérieur(+40)  //CHECK
 Clt client4{"BICEPS RIGHT", IPAddress(172, 20, 10, 124), 4321, 20, 50, 102}; //VALEURS A VERIFIER
 Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 60, 130, 180};   //Menton en bas(-70) - neutre(0) - Lève la tête(+50)    //CHECK
 Clt client6{"HEAD Z", IPAddress(172, 20, 10, 126), 4321, 50, 102, 160};   //A droite(-52) - neutre(0) - A gauche(+58)   //CHECK
@@ -28,6 +27,10 @@ Clt client9{"WRIST RIGHT", IPAddress(172, 20, 10, 129), 4321, 0, 0, 130};   //VA
 Clt clientA{"WAIST", IPAddress(172, 20, 10, 130), 4321, 40, 85, 130};  //vers la droite(-45) - neutre(0) - vers la gauche(+45)  //CHECK
 Clt clientB{"SPINE", IPAddress(172, 20, 10, 131), 4321, 55, 80, 105}; //vers la droite(+25) - neutre(0) - vers la gauche(-25)   //CHECK
 
+
+Clt clientC{"SHOULDER LEFT", IPAddress(172, 20, 10, 132), 4321, 80, 85, 125}; //Arrière(-5) - neutre(0) - Avant(+40)   //CHECK
+Clt clientD{"OMOPLATE LEFT", IPAddress(172, 20, 10, 133), 4321, 0, 0, 40}; //Collé au corps(0) - neutre(0) - Levé côté(+40)    //CHECK
+Clt clientE{"ROTATE LEFT", IPAddress(172, 20, 10, 134), 4321, 80, 100, 140}; //Vers l'intérieur(-20) - neutre(0) - vers l'extérieur(+40)  //CHECK
 
 
 
@@ -215,45 +218,87 @@ void Move_HEAD(char move_direction) { // U = UP ; D = Down ; R = Right ; L = Lef
   SendPacket(pck_char_HEAD_Z, client6.ip, client6.port);
 }
 
-void Move1()//choreography  Move1
-{
-  char* pck_char;
-  pck_char = ConvertToPacket(40);
 
-  SendPacket(pck_char, clientA.ip, clientA.port);//client 0: the left shoulder should move by 20 degrees
-  //SendPacket(pck_char, client6.ip, client6.port);//client 6: the left omoplate should move by 20 degrees
+void SHOULDER_MOVE(char side, int angle) {
+  if (side == 'R') {
+    char* pck_SHOULDER_RIGHT = ConvertToPacket(angle);
+    SendPacket(pck_SHOULDER_RIGHT, client1.ip, client1.port);
+  }
+  if (side == 'L') {
+    char* pck_SHOULDER_LEFT = ConvertToPacket(angle);
+    SendPacket(pck_SHOULDER_LEFT, clientC.ip, clientC.port);
+  }
 }
 
+void OMOPLATE_MOVE(char side, int angle) {
+  if (side == 'R') {
+    char* pck_OMOPLATE_RIGHT = ConvertToPacket(angle);
+    SendPacket(pck_OMOPLATE_RIGHT, client2.ip, client2.port);
+  }
+  if (side == 'L') {
+    char* pck_OMOPLATE_LEFT = ConvertToPacket(angle);
+    SendPacket(pck_OMOPLATE_LEFT, clientD.ip, clientD.port);
+  }
+}
+
+void ROTATE_MOVE(char side, int angle) {
+  if (side == 'R') {
+    char* pck_ROTATE_RIGHT = ConvertToPacket(angle);
+    SendPacket(pck_ROTATE_RIGHT, client3.ip, client3.port);
+  }
+  if (side == 'L') {
+    char* pck_ROTATE_LEFT = ConvertToPacket(angle);
+    SendPacket(pck_ROTATE_LEFT, clientE.ip, clientE.port);
+  }
+}
+
+void WAIST_MOVES(int angle) {
+  char* pck_WAIST = ConvertToPacket(angle);
+  SendPacket(pck_WAIST, clientA.ip, clientA.port);
+}
+
+void SPINE_MOVES(int angle) {
+  char* pck_SPINE = ConvertToPacket(angle);
+  SendPacket(pck_SPINE, clientB.ip, clientB.port);
+}
+
+void ARM_MOVES(char side) {
+  SHOULDER_MOVE(side, 40);
+  OMOPLATE_MOVE(side, 40);
+  ROTATE_MOVE(side, 40);
+}
+
+
 void HEAD_MOVES() {
- /* Move_HEAD('L'); //Start Complete circle
-  delay(3000);
-  Move_HEAD('7');
-  delay(3000);
-  Move_HEAD('U');
-  delay(3000);
-  Move_HEAD('9');
-  delay(3000);
-  Move_HEAD('R');
-  delay(3000);
-  Move_HEAD('3');
-  delay(3000);
-  Move_HEAD('D');
-  delay(3000);
-  Move_HEAD('1');
-  delay(3000);
-  Move_HEAD('0');  //End Complete circle
-*/
- /* delay(5000);
-  Move_HEAD('9'); //Start 'X'-Move
-  delay(2000);
-  Move_HEAD('1');
-  delay(2000);
-  Move_HEAD('7');
-  delay(2000);
-  Move_HEAD('3');
-  delay(2000);
-  Move_HEAD('0');  //End 'X'-Move
-*/
+  /* Move_HEAD('L'); //Start Complete circle
+    delay(3000);
+    Move_HEAD('7');
+    delay(3000);
+    Move_HEAD('U');
+    delay(3000);
+    Move_HEAD('9');
+    delay(3000);
+    Move_HEAD('R');
+    delay(3000);
+    Move_HEAD('3');
+    delay(3000);
+    Move_HEAD('D');
+    delay(3000);
+    Move_HEAD('1');
+    delay(3000);
+    Move_HEAD('0');  //End Complete circle
+  */
+  /* delay(5000);
+    Move_HEAD('9'); //Start 'X'-Move
+    delay(2000);
+    Move_HEAD('1');
+    delay(2000);
+    Move_HEAD('7');
+    delay(2000);
+    Move_HEAD('3');
+    delay(2000);
+    Move_HEAD('0');  //End 'X'-Move
+  */
   delay(5000);
   Move_HEAD('L'); //Start '+'-Move
   delay(3000);
@@ -350,6 +395,24 @@ void loop() {
             SendPacket(envoie_pkt, clientB.ip, clientB.port);
           }
           break;
+        case 'C':
+          success = CheckValue(clientC, envoie_angle);
+          if (success) {
+            SendPacket(envoie_pkt, clientC.ip, clientC.port);
+          }
+          break;
+        case 'D':
+          success = CheckValue(clientD, envoie_angle);
+          if (success) {
+            SendPacket(envoie_pkt, clientD.ip, clientD.port);
+          }
+          break;
+        case 'E':
+          success = CheckValue(clientE, envoie_angle);
+          if (success) {
+            SendPacket(envoie_pkt, clientE.ip, clientE.port);
+          }
+          break;
         default:
           break;
       }
@@ -365,6 +428,11 @@ void loop() {
     else {
       if (envoie_angle[0] == 'H') {
         HEAD_MOVES();
+      }
+      else {
+        if (envoie_angle[0] == 'A') {
+          ARM_MOVES('R');
+        }
       }
     }
   }
