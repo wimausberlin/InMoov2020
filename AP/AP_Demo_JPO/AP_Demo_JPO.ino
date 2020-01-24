@@ -35,7 +35,7 @@ Clt clientE{"ROTATE LEFT", IPAddress(172, 20, 10, 134), 4321, 80, 100, 140}; //V
 
 
 
-//WiFi Connection 
+//WiFi Connection
 
 const char* AP_ssid = "ESPsoftAP";
 const char* AP_password = "ESP8266Inmoov";
@@ -61,6 +61,7 @@ void setup() {
   Serial.begin(115200);
   delay(5000);
   pinMode(LED_BUILTIN, OUTPUT);
+
 
   /*----------------------
           Config AP
@@ -176,32 +177,77 @@ void SPINE_MOVES(int angle) {
         MAIN LOOP
     ---------------------*/
 void loop() {
+
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  digitalWrite(LED_BUILTIN, HIGH);
   delay(60000); //Attend 1min avant de commencer les moves le temps que les STA s'y connectent
 
+  /*
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(500);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(500);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(500);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(500);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(500);
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(500);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(1000);
+  */
   Move_HEAD('R');       //Tête à droite
-  delay(5000);
+  delay(10000);
   SPINE_MOVES(20);      //Penche à droite
   delay(10000);
   Move_HEAD('L');       //Tête à gauche
-  delay(5000);
+  delay(10000);
   SPINE_MOVES(1);       //Reset Spine
 
   delay(10000);
-  
+
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(500);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(500);
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+
   WAIST_MOVES(40);      //Pivote à gauche
   delay(10000);
   Move_HEAD('R');       //Tête à droite
-  delay(5000);
+  delay(10000);
   WAIST_MOVES(-40);     //Pivote à droite
   delay(10000);
   Move_HEAD('D');       //Tête en bas
-  delay(5000);
+  delay(10000);
   SPINE_MOVES(-10);     //Penche à gauche
   delay(10000);
   WAIST_MOVES(1);       //Reset Waist
   delay(10000);
   Move_HEAD('U');       //Tête en haut
-  delay(5000);
+  delay(10000);
   SPINE_MOVES(1);       //Reset Spine
   delay(10000);
   Move_HEAD('0');       //RESET Head
