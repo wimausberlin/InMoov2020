@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 #define BUFFER_SIZE 255 //size of the buffer
