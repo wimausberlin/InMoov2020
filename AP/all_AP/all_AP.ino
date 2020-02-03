@@ -37,7 +37,7 @@ Clt clientE{"ROTATE LEFT", IPAddress(172, 20, 10, 134), 4321, 80, 100, 140}; //V
 
 //WiFi Connection
 //const char* STA_ssid = "arduino1";
-//const char* STA_password = "wim123456";
+//const char* STA_password = "wim123456"; //wim
 const char* STA_ssid = "Oppo Bastien";
 const char* STA_password = "5T4N L33";
 
