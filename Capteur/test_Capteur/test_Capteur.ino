@@ -4,15 +4,23 @@
 
   int fsrPin = 0; // 
   int fsrReading; // 
+
   
+Clt client1{"SHOULDER LEFT", IPAddress(172, 20, 10, 121), 4321, 65, 87, 160}; //VALEURS A VERIFIER //Arrière - neutre - Avant
+Clt client2{"OMOPLATE LEFT", IPAddress(172, 20, 10, 122), 4321, 0, 5, 45}; //Collé au corps(-5) - neutre(0) - Levé côté(+40)
+Clt client3{"ROTATE LEFT", IPAddress(172, 20, 10, 123), 4321, 80, 100, 140}; //VALEURS A VERIFIER
+Clt client4{"BICEPS LEFT", IPAddress(172, 20, 10, 124), 4321, 20, 50, 102}; //VALEURS A VERIFIER
+Clt client5{"HEAD Y", IPAddress(172, 20, 10, 125), 4321, 60, 130, 180};   //Menton en bas(-70) - neutre(0) - Lève la tête(+50)
+Clt client6{"HEAD X", IPAddress(172, 20, 10, 126), 4321, 50, 102, 160};   //A droite(-52) - neutre(0) - A gauche(+58)
+Clt client7{"HAND RIGHT", IPAddress(172, 20, 10, 127), 4321, 0, 0, 150};          //HAND RIGHT
   void setup(void)
   {
     // Envoyons des information de débogage sur le port série
     Serial.begin(9600);
   }
-  void Move1(String envoie_angle)//choreography  Move1 
+  void Handshake0(String envoie_angle)//choreography  Handshake0 with the open hand
 {
-  if ( envoie_angle == "move1")
+  if ( envoie_angle == "Handshake0")
   {
     char [] pck_char = new char[255];
     pck_char[0] = '2';

@@ -77,7 +77,22 @@ void Initialize()
   RING.servo.write(angle_min);
   PINKY.servo.write(angle_min);
 }
-
+void Handshake()//handshake function
+{
+  BottomHandReading=analogRead(fsrPin);
+  int angle_min = client7.angle_Center;
+  Serial.print("Lecture Analogique = ");
+  Serial.print(BottomHandReading); // value read 
+ while(BottomHandReading>10)//if the sensor catches a signal 
+  {
+  THUMB.servo.write(angle_min+130);
+  INDEX.servo.write(angle_min+90);
+  MID_FING.servo.write(angle_min+90);
+  RING.servo.write(angle_min+90);
+  PINKY.servo.write(angle_min+80);
+  }
+ 
+}
 
 void setup() {
   Serial.begin(115200);
